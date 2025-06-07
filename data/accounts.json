@@ -1,0 +1,58 @@
+[
+  {
+    "id": "acc1",
+    "userId": "testuser123",
+    "accountNumber": "1234567890",
+    "accountType": "Checking",
+    "balance": 1500.00,
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "acc2",
+    "userId": "testuser123",
+    "accountNumber": "0987654321",
+    "accountType": "Savings",
+    "balance": 5000.00,
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "acc2b",
+    "userId": "testuser123",
+    "accountNumber": "1122334455",
+    "accountType": "Checking",
+    "balance": 75.25,
+    "createdAt": "2024-12-15T00:00:00.000Z"
+  },
+  {
+    "id": "acc2c",
+    "userId": "testuser123",
+    "accountNumber": "5566778899",
+    "accountType": "Savings",
+    "balance": 25000.00,
+    "createdAt": "2024-08-20T00:00:00.000Z"
+  },
+  {
+    "id": "acc3",
+    "userId": "demo123",
+    "accountNumber": "1111222233",
+    "accountType": "Checking",
+    "balance": 750.50,
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "acc4",
+    "userId": "gmnqxved2",
+    "accountNumber": "5555666677",
+    "accountType": "Checking",
+    "balance": 2500.75,
+    "createdAt": "2025-05-28T18:01:47.876Z"
+  },
+  {
+    "id": "acc5",
+    "userId": "gmnqxved2",
+    "accountNumber": "7777888899",
+    "accountType": "Savings",
+    "balance": 10000.00,
+    "createdAt": "2025-05-28T18:01:47.876Z"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "testuser123",
+    "firstName": "Test",
+    "lastName": "User",
+    "email": "test@example.com",
+    "phone": "1234567890",
+    "password": "password123",
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "demo123",
+    "firstName": "Demo",
+    "lastName": "User",
+    "email": "demo@example.com",
+    "phone": "9876543210",
+    "password": "demo123",
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "gmnqxved2",
+    "firstName": "Samuel",
+    "lastName": "Odunfa",
+    "email": "Samuel234@gmail.com",
+    "phone": "09037092197",
+    "password": "Samuel123",
+    "createdAt": "2025-05-28T18:01:47.876Z"
+  },
+  {
+    "id": "mp43zzt3f",
+    "firstName": "Stephen",
+    "lastName": "Odunfa",
+    "email": "adebowale235@gmail.com",
+    "phone": "09037092197",
+    "password": "Samuel235@",
+    "createdAt": "2025-06-06T08:49:45.265Z"
+  }
+]

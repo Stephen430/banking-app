@@ -1,0 +1,200 @@
+"use server"
+
+import { cookies } from "next/headers"
+import { redirect } from "next/navigation"
+
+// Mock database - In a real app, you'd use a proper database
+const users: any[] = []
+const accounts: any[] = []
+const transactions: any[] = []
+
+// Helper function to generate account numbers
+function generateAccountNumber(): string {
+  return Math.random().toString().slice(2, 12)
+}
+
+// Helper function to generate IDs
+function generateId(): string {
+  return Math.random().toString(36).substr(2, 9)
+}
+
+export async function registerUser(formData: FormData) {
+  const firstName = formData.get("firstName") as string
+  const lastName = formData.get("lastName") as string
+  const email = formData.get("email") as string
+  const phone = formData.get("phone") as string
+  const password = formData.get("password") as string
+  const confirmPassword = formData.get("confirmPassword") as string
+
+  // Validation
+  if (password !== confirmPassword) {
+    return { success: false, error: "Passwords do not match" }
+  }
+
+  if (users.find((user) => user.email === email)) {
+    return { success: false, error: "Email already exists" }
+  }
+
+  // Create user
+  const user = {
+    id: generateId(),
+    firstName,
+    lastName,
+    email,
+    phone,
+    password, // In a real app, hash this password
+    createdAt: new Date().toISOString(),
+  }
+
+  users.push(user)
+  return { success: true }
+}
+
+export async function loginUser(formData: FormData) {
+  const email = formData.get("email") as string
+  const password = formData.get("password") as string
+
+  const user = users.find((u) => u.email === email && u.password === password)
+
+  if (!user) {
+    return { success: false, error: "Invalid email or password" }
+  }
+
+  // Set session cookie
+  const cookieStore = cookies()
+  cookieStore.set("userId", user.id, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 60 * 60 * 24 * 7, // 1 week
+  })
+
+  return { success: true }
+}
+
+export async function logoutUser() {
+  const cookieStore = cookies()
+  cookieStore.delete("userId")
+  redirect("/")
+}
+
+export async function getUser() {
+  const cookieStore = cookies()
+  const userId = cookieStore.get("userId")?.value
+
+  if (!userId) return null
+
+  return users.find((user) => user.id === userId) || null
+}
+
+export async function createAccount(formData: FormData) {
+  const user = await getUser()
+  if (!user) {
+    return { success: false, error: "Not authenticated" }
+  }
+
+  const accountType = formData.get("accountType") as string
+  const initialDeposit = Number.parseFloat(formData.get("initialDeposit") as string)
+
+  if (initialDeposit < 0) {
+    return { success: false, error: "Initial deposit must be positive" }
+  }
+
+  const account = {
+    id: generateId(),
+    userId: user.id,
+    accountNumber: generateAccountNumber(),
+    accountType,
+    balance: initialDeposit,
+    createdAt: new Date().toISOString(),
+  }
+
+  accounts.push(account)
+
+  // Create initial deposit transaction if amount > 0
+  if (initialDeposit > 0) {
+    const transaction = {
+      id: generateId(),
+      accountId: account.id,
+      userId: user.id,
+      type: "deposit",
+      amount: initialDeposit,
+      description: "Initial deposit",
+      createdAt: new Date().toISOString(),
+    }
+    transactions.push(transaction)
+  }
+
+  return { success: true }
+}
+
+export async function getUserAccounts(userId?: string) {
+  const user = await getUser()
+  if (!user) return []
+
+  const targetUserId = userId || user.id
+  return accounts.filter((account) => account.userId === targetUserId)
+}
+
+export async function makeTransaction(formData: FormData) {
+  const user = await getUser()
+  if (!user) {
+    return { success: false, error: "Not authenticated" }
+  }
+
+  const accountId = formData.get("accountId") as string
+  const transactionType = formData.get("transactionType") as string
+  const amount = Number.parseFloat(formData.get("amount") as string)
+  const description = formData.get("description") as string
+
+  const account = accounts.find((acc) => acc.id === accountId && acc.userId === user.id)
+  if (!account) {
+    return { success: false, error: "Account not found" }
+  }
+
+  if (amount <= 0) {
+    return { success: false, error: "Amount must be positive" }
+  }
+
+  if (transactionType === "withdrawal" && account.balance < amount) {
+    return { success: false, error: "Insufficient funds" }
+  }
+
+  // Update account balance
+  if (transactionType === "deposit") {
+    account.balance += amount
+  } else {
+    account.balance -= amount
+  }
+
+  // Create transaction record
+  const transaction = {
+    id: generateId(),
+    accountId,
+    userId: user.id,
+    type: transactionType,
+    amount,
+    description: description || `${transactionType} transaction`,
+    createdAt: new Date().toISOString(),
+  }
+
+  transactions.push(transaction)
+  return { success: true }
+}
+
+export async function getTransactionHistory(userId: string) {
+  const userAccounts = accounts.filter((acc) => acc.userId === userId)
+  const accountIds = userAccounts.map((acc) => acc.id)
+
+  const userTransactions = transactions
+    .filter((trans) => accountIds.includes(trans.accountId))
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+
+  // Add account number to transactions
+  return userTransactions.map((trans) => {
+    const account = accounts.find((acc) => acc.id === trans.accountId)
+    return {
+      ...trans,
+      accountNumber: account?.accountNumber || "Unknown",
+    }
+  })
+}

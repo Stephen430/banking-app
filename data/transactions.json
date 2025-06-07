@@ -1,0 +1,74 @@
+[
+  {
+    "id": "txn1",
+    "accountId": "acc1",
+    "userId": "testuser123",
+    "type": "deposit",
+    "amount": 1500,
+    "description": "Initial deposit",
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "txn2",
+    "accountId": "acc2",
+    "userId": "testuser123",
+    "type": "deposit",
+    "amount": 5000,
+    "description": "Initial deposit",
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "txn3",
+    "accountId": "acc1",
+    "userId": "testuser123",
+    "type": "withdrawal",
+    "amount": 100,
+    "description": "ATM withdrawal",
+    "createdAt": "2025-05-29T14:30:00.000Z"
+  },
+  {
+    "id": "txn4",
+    "accountId": "acc1",
+    "userId": "testuser123",
+    "type": "deposit",
+    "amount": 100,
+    "description": "Payroll deposit",
+    "createdAt": "2025-05-30T09:00:00.000Z"
+  },
+  {
+    "id": "txn5",
+    "accountId": "acc3",
+    "userId": "demo123",
+    "type": "deposit",
+    "amount": 750.5,
+    "description": "Initial deposit",
+    "createdAt": "2025-05-28T00:00:00.000Z"
+  },
+  {
+    "id": "txn6",
+    "accountId": "acc4",
+    "userId": "gmnqxved2",
+    "type": "deposit",
+    "amount": 2500.75,
+    "description": "Initial deposit",
+    "createdAt": "2025-05-28T18:01:47.876Z"
+  },
+  {
+    "id": "txn7",
+    "accountId": "acc5",
+    "userId": "gmnqxved2",
+    "type": "deposit",
+    "amount": 10000,
+    "description": "Initial deposit",
+    "createdAt": "2025-05-28T18:01:47.876Z"
+  },
+  {
+    "id": "2okc3u0fs",
+    "accountId": "acc5",
+    "userId": "gmnqxved2",
+    "type": "deposit",
+    "amount": 200,
+    "description": "Done",
+    "createdAt": "2025-05-31T11:48:07.864Z"
+  }
+]

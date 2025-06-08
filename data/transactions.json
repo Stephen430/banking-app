@@ -70,5 +70,15 @@
     "amount": 200,
     "description": "Done",
     "createdAt": "2025-05-31T11:48:07.864Z"
+  },
+  {
+    "id": "0f07wu1o0",
+    "accountId": "ignbo9bbq",
+    "userId": "mp43zzt3f",
+    "type": "deposit",
+    "amount": 200000,
+    "description": "Initial deposit",
+    "accountNumber": "3882916180",
+    "createdAt": "2025-06-08T02:55:35.068Z"
   }
 ]

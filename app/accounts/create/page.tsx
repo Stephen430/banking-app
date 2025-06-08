@@ -140,14 +140,13 @@ function CreateAccountPage() {
       setIsSubmitting(false);
     }
   };
-
   if (isLoading) {
     return (
       <div className="flex min-h-screen flex-col">
         <div className="flex flex-1 items-center justify-center">
           <div className="flex flex-col items-center">
-            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-            <p className="mt-4 text-gray-600">Setting up account creation...</p>
+            <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+            <p className="mt-4 text-muted-foreground">Setting up account creation...</p>
           </div>
         </div>
       </div>
@@ -157,7 +156,7 @@ function CreateAccountPage() {
   if (!user) return null;
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-background">
       <AppHeader user={user} title="Create a New Account" />
       <main className="flex-1 container mx-auto px-4 py-6">
         <div className="mb-6">
@@ -169,14 +168,14 @@ function CreateAccountPage() {
 
         <div className="max-w-4xl mx-auto space-y-6">
           {success ? (
-            <Card className="border-green-100 bg-green-50">
+            <Card className="border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20">
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center justify-center text-center space-y-3">
-                  <div className="rounded-full bg-green-100 p-3">
-                    <CheckCircle2 className="h-8 w-8 text-green-600" />
+                  <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-3">
+                    <CheckCircle2 className="h-8 w-8 text-green-600 dark:text-green-400" />
                   </div>
-                  <CardTitle>Account Created Successfully!</CardTitle>
-                  <CardDescription className="text-base">
+                  <CardTitle className="text-foreground">Account Created Successfully!</CardTitle>
+                  <CardDescription className="text-base text-muted-foreground">
                     Your new {accountType} account has been created with an initial deposit of ${parseFloat(initialDeposit).toFixed(2)}.
                   </CardDescription>
                   <Button onClick={() => router.push("/accounts")} className="mt-2">
@@ -200,29 +199,28 @@ function CreateAccountPage() {
                       Select the type of account that best fits your financial needs
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <Card className={`border-2 cursor-pointer transition-all ${accountType === "Checking" ? "border-blue-400 bg-blue-50" : "hover:border-blue-200"}`} 
+                  <CardContent className="space-y-6">                    <div className="grid sm:grid-cols-2 gap-4">
+                      <Card className={`border-2 cursor-pointer transition-all ${accountType === "Checking" ? "border-primary bg-primary/5" : "hover:border-primary/50 bg-card"}`} 
                           onClick={() => setAccountType("Checking")}>
                         <CardHeader className="pb-3">
                           <div className="flex justify-between items-center">
-                            <div className="rounded-full bg-blue-100 p-2 mr-2">
-                              <CreditCard className="h-6 w-6 text-blue-600" />
+                            <div className="rounded-full bg-primary/10 p-2 mr-2">
+                              <CreditCard className="h-6 w-6 text-primary" />
                             </div>
                             {accountType === "Checking" && (
-                              <Badge className="bg-blue-500">Selected</Badge>
+                              <Badge className="bg-primary text-primary-foreground">Selected</Badge>
                             )}
                           </div>
-                          <CardTitle className="text-xl mt-2">Checking Account</CardTitle>
+                          <CardTitle className="text-xl mt-2 text-foreground">Checking Account</CardTitle>
                           <CardDescription>Perfect for everyday transactions and bill payments</CardDescription>
                         </CardHeader>
                         <CardContent>
                           <ul className="space-y-2">
                             {accountFeatures.Checking.map((feature, index) => (
                               <li key={index} className="flex items-start">
-                                <ShieldCheck className="h-5 w-5 text-blue-600 mr-2 shrink-0 mt-0.5" />
+                                <ShieldCheck className="h-5 w-5 text-primary mr-2 shrink-0 mt-0.5" />
                                 <div>
-                                  <span className="font-medium">{feature.title}:</span> {feature.description}
+                                  <span className="font-medium text-foreground">{feature.title}:</span> <span className="text-muted-foreground">{feature.description}</span>
                                 </div>
                               </li>
                             ))}
@@ -230,27 +228,26 @@ function CreateAccountPage() {
                         </CardContent>
                       </Card>
 
-                      <Card className={`border-2 cursor-pointer transition-all ${accountType === "Savings" ? "border-emerald-400 bg-emerald-50" : "hover:border-emerald-200"}`} 
+                      <Card className={`border-2 cursor-pointer transition-all ${accountType === "Savings" ? "border-green-400 dark:border-green-600 bg-green-50 dark:bg-green-900/20" : "hover:border-green-200 dark:hover:border-green-800 bg-card"}`} 
                           onClick={() => setAccountType("Savings")}>
                         <CardHeader className="pb-3">
                           <div className="flex justify-between items-center">
-                            <div className="rounded-full bg-emerald-100 p-2 mr-2">
-                              <Landmark className="h-6 w-6 text-emerald-600" />
+                            <div className="rounded-full bg-green-100 dark:bg-green-900/30 p-2 mr-2">
+                              <Landmark className="h-6 w-6 text-green-600 dark:text-green-400" />
                             </div>
                             {accountType === "Savings" && (
-                              <Badge className="bg-emerald-500">Selected</Badge>
+                              <Badge className="bg-green-500 dark:bg-green-600 text-white">Selected</Badge>
                             )}
                           </div>
-                          <CardTitle className="text-xl mt-2">Savings Account</CardTitle>
+                          <CardTitle className="text-xl mt-2 text-foreground">Savings Account</CardTitle>
                           <CardDescription>Great for building your savings and earning interest</CardDescription>
                         </CardHeader>
                         <CardContent>
                           <ul className="space-y-2">
                             {accountFeatures.Savings.map((feature, index) => (
                               <li key={index} className="flex items-start">
-                                <ShieldCheck className="h-5 w-5 text-emerald-600 mr-2 shrink-0 mt-0.5" />
-                                <div>
-                                  <span className="font-medium">{feature.title}:</span> {feature.description}
+                                <ShieldCheck className="h-5 w-5 text-green-600 dark:text-green-400 mr-2 shrink-0 mt-0.5" />                                <div>
+                                  <span className="font-medium text-foreground">{feature.title}:</span> <span className="text-muted-foreground">{feature.description}</span>
                                 </div>
                               </li>
                             ))}

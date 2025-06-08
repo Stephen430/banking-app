@@ -189,42 +189,54 @@ export async function createAccount(formData: FormData) {
     return { success: false, error: "Checking accounts require a minimum deposit of $25" }
   }
 
-  const account = {
-    id: generateId(),
-    userId: user.id,
-    accountNumber: generateAccountNumber(),
-    accountType,
-    balance: initialDeposit,
-    createdAt: new Date().toISOString(),
-  }
+  try {
+    // Read fresh data from files
+    const currentAccounts = readData(ACCOUNTS_FILE)
+    const currentTransactions = readData(TRANSACTIONS_FILE)
 
-  accounts.push(account)
-  writeData(ACCOUNTS_FILE, accounts)
-
-  // Create initial deposit transaction if amount > 0
-  if (initialDeposit > 0) {
-    const transaction = {
+    const account = {
       id: generateId(),
-      accountId: account.id,
       userId: user.id,
-      type: "deposit",
-      amount: initialDeposit,
-      description: "Initial deposit",
+      accountNumber: generateAccountNumber(),
+      accountType,
+      balance: initialDeposit,
       createdAt: new Date().toISOString(),
     }
-    transactions.push(transaction)
-    writeData(TRANSACTIONS_FILE, transactions)
-  }
 
-  return { success: true }
+    currentAccounts.push(account)
+    writeData(ACCOUNTS_FILE, currentAccounts)
+
+    // Create initial deposit transaction if amount > 0
+    if (initialDeposit > 0) {
+      const transaction = {
+        id: generateId(),
+        accountId: account.id,
+        userId: user.id,
+        type: "deposit",
+        amount: initialDeposit,
+        description: "Initial deposit",
+        accountNumber: account.accountNumber,
+        createdAt: new Date().toISOString(),
+      }
+      currentTransactions.push(transaction)
+      writeData(TRANSACTIONS_FILE, currentTransactions)
+    }
+
+    return { success: true, account }
+  } catch (error) {
+    console.error("Error creating account:", error)
+    return { success: false, error: "Failed to create account" }
+  }
 }
 
 export async function getUserAccounts(userId?: string) {
   const user = await getUser()
   if (!user) return []
 
+  // Read fresh account data to ensure we have the latest
+  const allAccounts = readData(ACCOUNTS_FILE)
   const targetUserId = userId || user.id
-  return accounts.filter((account) => account.userId === targetUserId)
+  return allAccounts.filter((account: any) => account.userId === targetUserId)
 }
 
 export async function makeTransaction(formData: FormData) {
@@ -238,10 +250,15 @@ export async function makeTransaction(formData: FormData) {
   const amount = Number.parseFloat(formData.get("amount") as string)
   const description = formData.get("description") as string
 
-  const account = accounts.find((acc) => acc.id === accountId && acc.userId === user.id)
-  if (!account) {
+  // Read fresh account data to ensure we have the latest
+  const allAccounts = readData(ACCOUNTS_FILE)
+  const accountIndex = allAccounts.findIndex((acc: any) => acc.id === accountId && acc.userId === user.id)
+  
+  if (accountIndex === -1) {
     return { success: false, error: "Account not found" }
   }
+
+  const account = allAccounts[accountIndex]
 
   if (amount <= 0) {
     return { success: false, error: "Amount must be positive" }
@@ -258,6 +275,10 @@ export async function makeTransaction(formData: FormData) {
     account.balance -= amount
   }
 
+  // Update the account in the array and write back to file
+  allAccounts[accountIndex] = account
+  writeData(ACCOUNTS_FILE, allAccounts)
+
   // Create transaction record
   const transaction = {
     id: generateId(),
@@ -269,22 +290,29 @@ export async function makeTransaction(formData: FormData) {
     createdAt: new Date().toISOString(),
   }
 
-  transactions.push(transaction)
-  writeData(TRANSACTIONS_FILE, transactions)
+  // Read fresh transaction data and add new transaction
+  const allTransactions = readData(TRANSACTIONS_FILE)
+  allTransactions.push(transaction)
+  writeData(TRANSACTIONS_FILE, allTransactions)
+  
   return { success: true }
 }
 
 export async function getTransactionHistory(userId: string) {
-  const userAccounts = accounts.filter((acc) => acc.userId === userId)
-  const accountIds = userAccounts.map((acc) => acc.id)
+  // Read fresh data to ensure we have the latest
+  const allAccounts = readData(ACCOUNTS_FILE)
+  const allTransactions = readData(TRANSACTIONS_FILE)
+  
+  const userAccounts = allAccounts.filter((acc: any) => acc.userId === userId)
+  const accountIds = userAccounts.map((acc: any) => acc.id)
 
-  const userTransactions = transactions
-    .filter((trans) => accountIds.includes(trans.accountId))
-    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  const userTransactions = allTransactions
+    .filter((trans: any) => accountIds.includes(trans.accountId))
+    .sort((a: any, b: any) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
 
   // Add account number to transactions
-  return userTransactions.map((trans) => {
-    const account = accounts.find((acc) => acc.id === trans.accountId)
+  return userTransactions.map((trans: any) => {
+    const account = allAccounts.find((acc: any) => acc.id === trans.accountId)
     return {
       ...trans,
       accountNumber: account?.accountNumber || "Unknown",

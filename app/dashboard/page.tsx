@@ -9,7 +9,8 @@ import {
   TrendingUp, Bell, CreditCard, Shield, 
   Wallet, User, ChevronRight, Banknote, 
   Landmark, LineChart, BarChart3, CircleDollarSign,
-  AlertTriangle, Percent, PieChart
+  AlertTriangle, Percent, PieChart, QrCode, MessageCircle,
+  Fingerprint, Users, Target, Smartphone, Bot
 } from "lucide-react"
 import Link from "next/link"
 import { getUser, getUserAccounts, getTransactionHistory } from "@/lib/actions"
@@ -18,6 +19,7 @@ import { AppHeader } from "@/components/app-header"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
+import FloatingFeatures from "@/components/floating-features"
 
 // Helper function to calculate totals
 function calculateTotalBalance(accounts: any[]) {
@@ -161,6 +163,36 @@ export default function DashboardPage() {
             <span>Transactions</span>
           </Link>
           
+          <Link href="/qr-payments" 
+                className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
+            <QrCode className="h-5 w-5 mr-3" />
+            <span>QR Payments</span>
+          </Link>
+          
+          <Link href="/portfolio" 
+                className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
+            <TrendingUp className="h-5 w-5 mr-3" />
+            <span>Investments</span>
+          </Link>
+          
+          <Link href="/notifications" 
+                className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
+            <Bell className="h-5 w-5 mr-3" />
+            <span>Notifications</span>
+          </Link>
+          
+          <Link href="/ai-assistant" 
+                className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
+            <Bot className="h-5 w-5 mr-3" />
+            <span>AI Assistant</span>
+          </Link>
+          
+          <Link href="/bill-split" 
+                className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
+            <Users className="h-5 w-5 mr-3" />
+            <span>Bill Splitter</span>
+          </Link>
+          
           <Link href="/history" 
                 className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
             <History className="h-5 w-5 mr-3" />
@@ -179,6 +211,12 @@ export default function DashboardPage() {
                 className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
             <Shield className="h-5 w-5 mr-3" />
             <span>Security</span>
+          </Link>
+          
+          <Link href="/biometric" 
+                className="flex items-center px-4 py-3 text-muted-foreground hover:bg-accent hover:text-foreground rounded-lg transition-colors">
+            <Fingerprint className="h-5 w-5 mr-3" />
+            <span>Biometric</span>
           </Link>
         </nav>
       </aside>
@@ -290,7 +328,7 @@ export default function DashboardPage() {
           {/* Quick Actions */}
           <div className="mb-8">
             <h2 className="text-lg font-semibold mb-4 text-foreground">Quick Actions</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
               <Link href="/accounts/create">
                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full hover:bg-accent/50">
                   <CardContent className="flex items-center p-6 h-full">
@@ -315,29 +353,83 @@ export default function DashboardPage() {
                 </Card>
               </Link>
 
-              <Link href="/transactions">
+              <Link href="/qr-payments">
                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full hover:bg-accent/50">
                   <CardContent className="flex items-center p-6 h-full">
-                    <CircleDollarSign className="h-8 w-8 text-green-600 dark:text-green-400 mr-3" />
+                    <QrCode className="h-8 w-8 text-blue-600 dark:text-blue-400 mr-3" />
                     <div>
-                      <h3 className="font-semibold text-foreground">Deposit</h3>
-                      <p className="text-sm text-muted-foreground">Add funds</p>
+                      <h3 className="font-semibold text-foreground">QR Pay</h3>
+                      <p className="text-sm text-muted-foreground">Scan & pay</p>
                     </div>
                   </CardContent>
                 </Card>
               </Link>
 
-              <Link href="/history">
+              <Link href="/portfolio">
                 <Card className="hover:shadow-md transition-shadow cursor-pointer h-full hover:bg-accent/50">
                   <CardContent className="flex items-center p-6 h-full">
-                    <CreditCard className="h-8 w-8 text-orange-600 dark:text-orange-400 mr-3" />
+                    <TrendingUp className="h-8 w-8 text-green-600 dark:text-green-400 mr-3" />
                     <div>
-                      <h3 className="font-semibold text-foreground">Payments</h3>
-                      <p className="text-sm text-muted-foreground">Manage bills</p>
+                      <h3 className="font-semibold text-foreground">Invest</h3>
+                      <p className="text-sm text-muted-foreground">Track portfolio</p>
                     </div>
                   </CardContent>
                 </Card>
               </Link>
+            </div>
+
+            {/* Advanced Features Row */}
+            <div className="mb-4">
+              <h3 className="text-md font-medium mb-3 text-foreground">Advanced Features</h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Link href="/ai-assistant">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full hover:bg-accent/50">
+                    <CardContent className="flex items-center p-4 h-full">
+                      <Bot className="h-6 w-6 text-indigo-600 dark:text-indigo-400 mr-3" />
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground">AI Assistant</h4>
+                        <p className="text-xs text-muted-foreground">Financial advice</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link href="/biometric">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full hover:bg-accent/50">
+                    <CardContent className="flex items-center p-4 h-full">
+                      <Fingerprint className="h-6 w-6 text-red-600 dark:text-red-400 mr-3" />
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground">Biometric</h4>
+                        <p className="text-xs text-muted-foreground">Secure login</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link href="/bill-split">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full hover:bg-accent/50">
+                    <CardContent className="flex items-center p-4 h-full">
+                      <Users className="h-6 w-6 text-pink-600 dark:text-pink-400 mr-3" />
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground">Bill Split</h4>
+                        <p className="text-xs text-muted-foreground">Share expenses</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+
+                <Link href="/notifications">
+                  <Card className="hover:shadow-md transition-shadow cursor-pointer h-full hover:bg-accent/50">
+                    <CardContent className="flex items-center p-4 h-full">
+                      <Bell className="h-6 w-6 text-orange-600 dark:text-orange-400 mr-3" />
+                      <div>
+                        <h4 className="text-sm font-semibold text-foreground">Alerts</h4>
+                        <p className="text-xs text-muted-foreground">Real-time updates</p>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </div>
             </div>
           </div>
           
@@ -625,6 +717,9 @@ export default function DashboardPage() {
           </div>
         </div>
       </main>
+
+      {/* Floating Features */}
+      <FloatingFeatures />
     </div>
   )
 }

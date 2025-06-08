@@ -496,7 +496,7 @@ export default function TransactionsPage() {
                                     <h3 className="font-semibold text-foreground">{account.accountType} Account</h3>
                                     <p className="text-sm text-muted-foreground">Account: •••• {account.accountNumber.slice(-4)}</p>
                                     <p className="text-xs text-muted-foreground">
-                                      Opened: {new Date(account.createdAt).toLocaleDateString()}
+                                      Opened: {account.createdAt ? new Date(account.createdAt).toLocaleDateString() : 'N/A'}
                                     </p>
                                   </div>
                                 </div>
@@ -560,9 +560,11 @@ export default function TransactionsPage() {
                           <div className="text-center py-8 border-2 border-dashed border-border rounded-lg">
                             <CreditCard className="h-12 w-12 text-muted-foreground mx-auto mb-3" />
                             <p className="text-muted-foreground mb-2">No accounts available</p>
-                            <Button variant="outline" size="sm">
-                              Create New Account
-                            </Button>
+                            <Link href="/accounts/create">
+                              <Button variant="outline" size="sm">
+                                Create New Account
+                              </Button>
+                            </Link>
                           </div>
                         )}
                       </div>
